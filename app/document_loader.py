@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -57,6 +58,14 @@ def extract_pages_from_pdf(pdf_path: Path) -> list[DocumentPage]:
 
     for page_index, page in enumerate(reader.pages, start=1):
         page_text = page.extract_text() or ""
+
+        page_text = re.sub(
+            r"RAMI\s+[—-]\s+Página\s+\d+",
+            "",
+            page_text,
+            flags=re.IGNORECASE,
+        )
+
         page_text = page_text.strip()
 
         if not page_text:
